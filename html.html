@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>University Search</title>
+  <link rel="stylesheet" href="css.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Enter the university name</h1>
+
+    <div class="search-area">
+      <input type="text" id="searchInput" placeholder="like: king,harvard">
+      <button onclick="searchUniversities()">Search</button>
+      <button onclick="toggleDarkMode()">🌙</button>
+    </div>
+
+    <p id="count"></p>
+    <div id="results" class="results-grid"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
