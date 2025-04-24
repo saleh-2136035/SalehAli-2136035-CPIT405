@@ -1,39 +1,39 @@
-function searchUniversities() {
-  const query = document.getElementById("searchInput").value.trim();
-  const url = `http://universities.hipolabs.com/search?name=${query}`;
+function getRandomMeal() {
+  const url = "https://www.themealdb.com/api/json/v1/1/random.php";
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML = "";
 
   fetch(url)
     .then(res => res.json())
     .then(data => {
-      const resultsDiv = document.getElementById("results");
-      const count = document.getElementById("count");
-      resultsDiv.innerHTML = "";
+      const meal = data.meals[0];
+      const ingredients = [];
 
-      if (data.length === 0) {
-        resultsDiv.innerHTML = "<p>No universities found.</p>";
-        count.textContent = "";
-        return;
+      for (let i = 1; i <= 20; i++) {
+        const ingredient = meal[`strIngredient${i}`];
+        const measure = meal[`strMeasure${i}`];
+        if (ingredient && ingredient.trim()) {
+          ingredients.push(`${measure} ${ingredient}`);
+        }
       }
 
-      count.textContent = `Found ${data.length} universities`;
-
-      data.forEach(university => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <h3>${university.name}</h3>
-          <p><strong>Country:</strong> ${university.country}</p>
-          <p><a href="${university.web_pages[0]}" target="_blank">Visit Website</a></p>
-        `;
-        resultsDiv.appendChild(card);
-      });
+      const card = document.createElement("div");
+      card.className = "item";
+      card.innerHTML = `
+        <div class="img"><img src="${meal.strMealThumb}" alt="meal"/></div>
+        <div class="item-body">
+          <h6>${meal.strMeal}</h6>
+          <p><strong>الفئة:</strong> ${meal.strCategory || "غير محدد"}</p>
+          <p><strong>المنطقة:</strong> ${meal.strArea || "غير محدد"}</p>
+          <p><strong>المكونات:</strong><br>${ingredients.join(", ")}</p>
+          <p><strong>الطريقة:</strong><br>${meal.strInstructions.slice(0, 300)}...</p>
+          <a href="${meal.strYoutube}" target="_blank">🎥 شاهد الطريقة بالفيديو</a>
+        </div>
+      `;
+      resultsDiv.appendChild(card);
     })
     .catch(err => {
-      document.getElementById("results").innerHTML = "<p>Error fetching data.</p>";
+      resultsDiv.innerHTML = "<p style='padding:20px'>حدث خطأ أثناء جلب البيانات.</p>";
       console.error(err);
     });
-}
-
-function toggleDarkMode() {
-  document.body.classList.toggle("dark-mode");
 }
